@@ -29,8 +29,8 @@ class CadastroPage(BasePage):
 
     # Dados Básicos
     CAMPO_NOME = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[1]/input")
-    RADIO_MASCULINO = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[2]/div/label[1]/span[1]/input")
-    RADIO_FEMININO = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[2]/div/label[2]/span[1]/input")
+    RADIO_MASCULINO = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[2]/div/label[1]")
+    RADIO_FEMININO = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[2]/div/label[2]")
     CAMPO_CPF = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[3]/input")
     CAMPO_DATA_NASCIMENTO = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[4]/input")
     CAMPO_RG = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[5]/input")
@@ -111,7 +111,26 @@ class CadastroPage(BasePage):
         Args:
             cargo: Texto do cargo (ex: "Cargo 1", "Cargo 2", etc)
         """
-        selecionar_dropdown_por_texto(self.driver, self.DROPDOWN_CARGO[1], cargo)
+        from utils.helpers import selecionar_dropdown_por_teclas
+
+        # Mapear texto para número da opção
+        mapa_cargos = {
+            "Cargo 1": 1,
+            "Cargo 2": 2,
+            "Cargo 3": 3,
+            "Cargo 4": 4,
+            "Cargo 5": 5,
+        }
+
+        numero_opcao = mapa_cargos.get(cargo)
+        if not numero_opcao:
+            raise ValueError(f"Cargo inválido: {cargo}. Use 'Cargo 1' até 'Cargo 5'.")
+
+        selecionar_dropdown_por_teclas(
+            self.driver,
+            self.DROPDOWN_CARGO[1],  # XPATH do dropdown
+            numero_opcao
+        )
 
     @allure.step("Marcar 'Não usa EPI'")
     def marcar_nao_usa_epi(self):

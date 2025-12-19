@@ -168,6 +168,22 @@ class ListaFuncionariosPage(BasePage):
         # Este seletor precisa ser ajustado conforme a estrutura real
         return contar_elementos(self.driver, By.XPATH, self.TODOS_CARDS_XPATH)
 
+    def elemento_existe(self, by, value, timeout=5):
+        """
+        Verifica se um elemento existe na página.
+
+        Wrapper para helpers.elemento_existe para uso direto na classe.
+
+        Args:
+            by: Tipo de seletor (By.XPATH, By.ID, etc)
+            value: Valor do seletor
+            timeout: Tempo de espera em segundos
+
+        Returns:
+            bool: True se elemento existe, False caso contrário
+        """
+        return elemento_existe(self.driver, by, value, timeout)
+
     # ===== MÉTODOS DE AÇÃO NO CARD =====
 
     @allure.step("Clicar no menu '...' do primeiro funcionário")

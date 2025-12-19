@@ -231,6 +231,39 @@ def selecionar_dropdown_por_texto(driver, dropdown_xpath, opcao_texto, timeout=1
     clicar_com_espera(driver, By.XPATH, opcao_xpath, timeout)
 
 
+def selecionar_dropdown_por_teclas(driver, dropdown_xpath, numero_opcao, timeout=10):
+    """
+    Seleciona opção em dropdown customizado usando teclas do teclado.
+
+    Ideal para dropdowns Ant Design ou similares que não são <select> nativos.
+
+    Args:
+        driver: Instância do WebDriver
+        dropdown_xpath: XPATH do dropdown para clicar
+        numero_opcao: Número da opção (1=primeira, 2=segunda, etc)
+        timeout: Tempo máximo de espera
+
+    Exemplo:
+        selecionar_dropdown_por_teclas(driver, "//div[@id='cargo']", 1)  # Seleciona "Cargo 01"
+    """
+    from selenium.webdriver.common.keys import Keys
+    import time
+
+    # 1. Clicar no dropdown para abrir
+    clicar_com_espera(driver, By.XPATH, dropdown_xpath, timeout)
+    time.sleep(0.5)  # Aguardar dropdown abrir
+
+    # 2. Pressionar DOWN (numero_opcao - 1) vezes para navegar
+    elemento = driver.find_element(By.XPATH, dropdown_xpath)
+    for _ in range(numero_opcao - 1):
+        elemento.send_keys(Keys.DOWN)
+        time.sleep(0.2)
+
+    # 3. Pressionar ENTER para selecionar
+    elemento.send_keys(Keys.ENTER)
+    time.sleep(0.3)
+
+
 def validar_cpf_formato(cpf: str) -> bool:
     """
     Valida o formato básico de um CPF (XXX.XXX.XXX-XX).

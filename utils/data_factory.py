@@ -4,7 +4,6 @@ from datetime import date
 
 
 def gerar_cpf_fake():
-    # Gera CPF simples (não validado) apenas para testes de fluxo
     return "".join([str(random.randint(0, 9)) for _ in range(11)])
 
 
@@ -21,6 +20,7 @@ def gerar_data_nascimento(anos=30):
 def gerar_dados_funcionario():
     return {
         "nome": gerar_nome(),
+        "sexo": random.choice(['M', 'F']),  # ← ADICIONAR ESTA LINHA
         "cpf": gerar_cpf_fake(),
         "data_nascimento": gerar_data_nascimento(),
     }
