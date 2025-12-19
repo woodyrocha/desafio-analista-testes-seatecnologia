@@ -50,3 +50,5 @@ evidence/allure-results/
 .tox/
 pip-wheel-metadata/
 .Python
+
+# Jupyter Notebook checkpoints
