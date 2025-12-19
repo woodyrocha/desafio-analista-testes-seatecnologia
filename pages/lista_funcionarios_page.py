@@ -143,17 +143,25 @@ class ListaFuncionariosPage(BasePage):
 
     @allure.step("Verificar se funcionário existe na lista")
     def funcionario_existe(self, nome: str) -> bool:
+        """Busca funcionário no DOM sem depender de scroll."""
+        script = """
+        var spans = document.querySelectorAll('span');
+        for (var i = 0; i < spans.length; i++) {
+            if (spans[i].textContent.includes(arguments[0])) {
+                return true;
+            }
+        }
+        return false;
         """
-        Verifica se um funcionário com o nome especificado existe na lista.
+        return self.driver.execute_script(script, nome)
 
-        Args:
-            nome: Nome do funcionário a buscar
-
-        Returns:
-            bool: True se funcionário existe, False caso contrário
-        """
-        xpath = f"//span[contains(text(), '{nome}')]"
-        return elemento_existe(self.driver, By.XPATH, xpath, timeout=5)
+    @allure.step("Fazer scroll até o final da lista")
+    def scroll_ate_final(self):
+        """Rola até o final da lista de funcionários."""
+        # Scroll até o final da página
+        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        import time
+        time.sleep(0.5)
 
     @allure.step("Contar funcionários na lista")
     def contar_funcionarios(self) -> int:
