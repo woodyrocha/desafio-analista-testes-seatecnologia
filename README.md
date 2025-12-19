@@ -111,49 +111,60 @@ A escolha por Selenium + Python se deu pela flexibilidade da ferramenta, ampla a
 
 ### 6.2 Estrutura de Diretórios do Projeto
 
+Abaixo está a estrutura atual do repositório, refletindo as alterações reais feitas durante a implementação (pacotes Python, `conftest.py`, diretório de evidências):
+
 ```text
-analista-teste-automation/
-│
+/ (repo root)
 ├── README.md
 ├── requirements.txt
 ├── pytest.ini
-│
+├── conftest.py
+├── .gitignore
+├── .venv/                # ambiente virtual local (recomendado: não comitar)
+
 ├── docs/
 │   ├── plano-de-testes.md
 │   ├── casos-de-teste.md
 │   ├── bugs-reportados.md
 │   ├── analise-melhorias.md
 │   └── relatorio-final.md
-│
+
 ├── tests/
 │   ├── e2e/
 │   │   ├── test_cadastro_funcionario.py
 │   │   ├── test_edicao_funcionario.py
-│   │   ├── test_exclusao_funcionario.py
-│   │
+│   │   └── test_exclusao_funcionario.py
 │   ├── validations/
 │   │   ├── test_validacao_cpf.py
-│   │   ├── test_validacao_data.py
-│   │
+│   │   └── test_validacao_data.py
 │   ├── navigation/
-│   │   ├── test_navegacao_links.py
-│
-├── pages/
+│   │   └── test_navegacao_links.py
+│   └── security/
+│       ├── test_seguranca_basica.py
+│       └── test_seguranca_inputs.py
+
+├── pages/                # Page Objects (POM) — agora pacotes Python
+│   ├── __init__.py
 │   ├── base_page.py
 │   ├── cadastro_page.py
-│   ├── lista_funcionarios_page.py
-│
-├── utils/
+│   └── lista_funcionarios_page.py
+
+├── utils/                # helpers e factories — agora pacotes Python
+│   ├── __init__.py
 │   ├── driver_factory.py
 │   ├── data_factory.py
-│   ├── helpers.py
-│
+│   └── helpers.py
+
 ├── evidence/
 │   ├── screenshots/
 │   └── videos/
-│
-└── .gitignore
+└── .pytest_cache/
 ```
+
+Notas rápidas:
+- `pages/` e `utils/` foram transformados em pacotes Python (contêm `__init__.py`) para permitir imports diretos nos testes.
+- `conftest.py` adiciona a raiz do projeto ao PYTHONPATH durante execução do pytest para evitar problemas de importação locais.
+- O diretório do ambiente virtual (`.venv` ou `venv`) deve ser ignorado pelo Git — ver `.gitignore`.
 
 **Justificativa da Arquitetura:**
 
