@@ -42,6 +42,7 @@ def test_cadastro_funcionario_dados_validos(driver, base_url):
         # Gerar dados fake para o teste
         dados = gerar_dados_funcionario()
         dados['cargo'] = 'Cargo 1'  # Cargo fixo do dropdown
+        dados['nao_usa_epi'] = True
 
         # Anexar dados ao relatório Allure
         allure.attach(

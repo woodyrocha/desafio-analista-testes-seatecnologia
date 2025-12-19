@@ -33,11 +33,11 @@ class CadastroPage(BasePage):
     RADIO_FEMININO = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[2]/div/label[2]")
     CAMPO_CPF = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[3]/input")
     CAMPO_DATA_NASCIMENTO = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[4]/input")
-    CAMPO_RG = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[5]/input")
+    CAMPO_RG = (By.XPATH, "/html/body/div[1]/main/div[2]/div[2]/form/div[3]/div/div[5]/input")
     DROPDOWN_CARGO = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[3]/div/div[6]/div/div")
 
     # EPIs e Atividades
-    CHECKBOX_NAO_USA_EPI = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[4]/div/label/span[1]/input")
+    CHECKBOX_NAO_USA_EPI = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[4]/div/label")
     DROPDOWN_ATIVIDADE = (By.XPATH, "/html/body/div/main/div[2]/div[2]/form/div[4]/div/div/div[1]/div/div")
     DROPDOWN_EPI = (By.XPATH, "/html/body/div[1]/main/div[2]/div[2]/form/div[4]/div/div/div[2]/div/div[1]/div")
     CAMPO_NUMERO_CA = (By.XPATH, "/html/body/div[1]/main/div[2]/div[2]/form/div[4]/div/div/div[2]/div/div[2]/input")
@@ -105,30 +105,24 @@ class CadastroPage(BasePage):
 
     @allure.step("Selecionar cargo: {cargo}")
     def selecionar_cargo(self, cargo: str):
-        """
-        Seleciona um cargo no dropdown.
-
-        Args:
-            cargo: Texto do cargo (ex: "Cargo 1", "Cargo 2", etc)
-        """
+        """Seleciona um cargo no dropdown."""
         from utils.helpers import selecionar_dropdown_por_teclas
 
-        # Mapear texto para número da opção
         mapa_cargos = {
-            "Cargo 1": 1,
-            "Cargo 2": 2,
-            "Cargo 3": 3,
-            "Cargo 4": 4,
-            "Cargo 5": 5,
+            "Cargo 1": 0,
+            "Cargo 2": 1,
+            "Cargo 3": 2,
+            "Cargo 4": 3,
+            "Cargo 5": 4,
         }
 
         numero_opcao = mapa_cargos.get(cargo)
-        if not numero_opcao:
+        if numero_opcao is None:  # ← CORRIGIDO!
             raise ValueError(f"Cargo inválido: {cargo}. Use 'Cargo 1' até 'Cargo 5'.")
 
         selecionar_dropdown_por_teclas(
             self.driver,
-            self.DROPDOWN_CARGO[1],  # XPATH do dropdown
+            self.DROPDOWN_CARGO[1],
             numero_opcao
         )
 
