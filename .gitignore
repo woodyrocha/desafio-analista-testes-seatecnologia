@@ -33,3 +33,20 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+
+# IDE (PyCharm / IntelliJ)
+.idea/
+*.iml
+
+# Test evidence (avoid committing large binaries)
+evidence/screenshots/
+evidence/videos/
+evidence/allure-results/
+!evidence/README.md
+
+# Type-check / caches / tox
+.mypy_cache/
+.cache/
+.tox/
+pip-wheel-metadata/
+.Python
