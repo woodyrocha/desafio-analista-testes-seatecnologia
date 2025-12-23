@@ -108,18 +108,24 @@ def test_cadastro_funcionario_sem_epi(driver, base_url):
 
 
 @allure.feature('Cadastro de Funcionário')
-@allure.story('Cadastro com dados parciais')
-@allure.severity(allure.severity_level.NORMAL)
+@allure.story('Validação de RG obrigatório')
+@allure.severity(allure.severity_level.CRITICAL)
 @pytest.mark.e2e
-def test_cadastro_funcionario_somente_obrigatorios(driver, base_url):
+@pytest.mark.validations
+def test_validacao_rg_obrigatorio(driver, base_url):
     """
-    Testa cadastro preenchendo apenas campos obrigatórios.
+    Testa que RG é campo obrigatório no cadastro.
 
-    Cenário:
-        1. Preencher apenas: Nome, Sexo, CPF, Data Nascimento, Cargo
-        2. Não preencher RG
-        3. Não preencher EPIs
-        4. Validar que cadastro é aceito
+    ⚠️ IMPORTANTE: RG é campo obrigatório conforme requisitos
+
+    Comportamento esperado:
+        - Preencher TODOS os campos EXCETO RG
+        - Sistema deve REJEITAR o cadastro
+        - Sistema deve exigir RG antes de permitir salvar
+
+    Comportamento atual:
+        Se o teste FALHA: Sistema está aceitando cadastro sem RG (BUG)
+        Se o teste PASSA: Sistema está corretamente exigindo RG (OK)
     """
 
     with allure.step("Acessar aplicação e iniciar cadastro"):
@@ -127,29 +133,75 @@ def test_cadastro_funcionario_somente_obrigatorios(driver, base_url):
         lista_page = ListaFuncionariosPage(driver)
         lista_page.iniciar_cadastro_funcionario()
 
-    with allure.step("Preencher apenas campos obrigatórios"):
+    with allure.step("Preencher todos os campos EXCETO RG"):
         cadastro_page = CadastroPage(driver)
 
         dados = gerar_dados_funcionario()
         dados['cargo'] = 'Cargo 3'
         dados['nao_usa_epi'] = True
-        # NÃO incluir RG
 
+        allure.attach(
+            f"Nome: {dados['nome']}\n"
+            f"CPF: {dados['cpf']}\n"
+            f"Data: {dados['data_nascimento']}\n"
+            f"RG: NÃO PREENCHIDO (proposital)",
+            name="Dados do Teste",
+            attachment_type=allure.attachment_type.TEXT
+        )
+
+        # Preencher TUDO exceto RG
         cadastro_page.preencher_nome(dados['nome'])
         cadastro_page.selecionar_sexo('M')
         cadastro_page.preencher_cpf(dados['cpf'])
         cadastro_page.preencher_data_nascimento(dados['data_nascimento'])
+        # ⚠️ NÃO preencher RG - PROPOSITAL para testar validação
         cadastro_page.selecionar_cargo(dados['cargo'])
         cadastro_page.marcar_nao_usa_epi()
+
+        from utils.helpers import tirar_screenshot, anexar_screenshot_allure
+        caminho = tirar_screenshot(driver, "formulario_sem_rg")
+        anexar_screenshot_allure(caminho, "Formulário preenchido SEM RG")
+
+    with allure.step("Tentar salvar sem RG"):
         cadastro_page.salvar()
 
-    with allure.step("Validar cadastro"):
         import time
         time.sleep(2)
 
+        from utils.helpers import tirar_screenshot, anexar_screenshot_allure
+        caminho = tirar_screenshot(driver, "resultado_sem_rg")
+        anexar_screenshot_allure(caminho, "Resultado ao tentar salvar sem RG")
+
+    with allure.step("Validar comportamento do sistema"):
         lista_page = ListaFuncionariosPage(driver)
-        assert lista_page.funcionario_existe(dados['nome']), \
-            "Cadastro com apenas campos obrigatórios deveria ser aceito"
+
+        # Verifica se funcionário foi cadastrado
+        funcionario_cadastrado = lista_page.funcionario_existe(dados['nome'])
+
+        if funcionario_cadastrado:
+            # Sistema ACEITOU cadastro sem RG - Isso é um BUG!
+            allure.attach(
+                "❌ BUG ENCONTRADO: Sistema aceitou cadastro sem RG\n"
+                "RG deveria ser campo obrigatório\n"
+                "Funcionário foi cadastrado mesmo sem RG preenchido",
+                name="Bug Detectado",
+                attachment_type=allure.attachment_type.TEXT
+            )
+            pytest.fail(
+                "Sistema aceitou cadastro sem RG. "
+                "RG deveria ser obrigatório conforme requisitos. "
+                "BUG: Campo obrigatório não está sendo validado."
+            )
+        else:
+            # Sistema REJEITOU cadastro sem RG - Comportamento CORRETO!
+            allure.attach(
+                "✅ Sistema corretamente exigiu RG\n"
+                "Cadastro foi rejeitado sem RG\n"
+                "Comportamento esperado confirmado",
+                name="Validação Correta",
+                attachment_type=allure.attachment_type.TEXT
+            )
+            # Teste passa - sistema está correto
 
 
 @allure.feature('Cadastro de Funcionário')

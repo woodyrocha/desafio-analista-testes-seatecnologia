@@ -408,11 +408,11 @@ def test_calculo_idade_correto():
     Testa que cálculo de idade está correto.
     """
     with allure.step("Testar cálculo de idade"):
-        # Casos conhecidos
+        # Casos conhecidos - ATUALIZADO PARA 2025
         casos = [
-            ("01/01/1990", 34),  # ~34 anos em 2024
-            ("01/01/2000", 24),  # ~24 anos em 2024
-            ("01/01/2010", 14),  # ~14 anos em 2024
+            ("01/01/1990", 35),  # 35 anos em 2025
+            ("01/01/2000", 25),  # 25 anos em 2025
+            ("01/01/2010", 15),  # 15 anos em 2025
         ]
 
         for data, idade_esperada in casos:

@@ -110,6 +110,7 @@ def test_validacao_campos_obrigatorios_epi(driver, base_url):
         cadastro_page.selecionar_sexo(dados['sexo'])
         cadastro_page.preencher_cpf(dados['cpf'])
         cadastro_page.preencher_data_nascimento(dados['data_nascimento'])
+        cadastro_page.preencher_rg(dados['rg'])
         cadastro_page.selecionar_cargo('Cargo 1')
 
         # NÃO marcar "Não usa EPI"
@@ -215,6 +216,7 @@ def test_cadastro_com_multiplos_epis(driver, base_url):
         cadastro_page.selecionar_sexo(dados['sexo'])
         cadastro_page.preencher_cpf(dados['cpf'])
         cadastro_page.preencher_data_nascimento(dados['data_nascimento'])
+        cadastro_page.preencher_rg(dados['rg'])
         cadastro_page.selecionar_cargo('Cargo 1')
 
     with allure.step("Adicionar primeiro EPI"):
@@ -295,6 +297,7 @@ def test_cadastro_com_multiplas_atividades(driver, base_url):
         cadastro_page.selecionar_sexo(dados['sexo'])
         cadastro_page.preencher_cpf(dados['cpf'])
         cadastro_page.preencher_data_nascimento(dados['data_nascimento'])
+        cadastro_page.preencher_rg(dados['rg'])
         cadastro_page.selecionar_cargo('Cargo 1')
 
     with allure.step("Adicionar primeira atividade com EPI"):
@@ -365,6 +368,7 @@ def test_validacao_numero_ca_obrigatorio(driver, base_url):
         cadastro_page.selecionar_sexo(dados['sexo'])
         cadastro_page.preencher_cpf(dados['cpf'])
         cadastro_page.preencher_data_nascimento(dados['data_nascimento'])
+        cadastro_page.preencher_rg(dados['rg'])
         cadastro_page.selecionar_cargo('Cargo 1')
 
     with allure.step("Selecionar atividade e EPI SEM preencher CA"):
@@ -423,6 +427,7 @@ def test_cadastro_com_diferentes_epis(driver, base_url, nome_epi):
         cadastro_page.selecionar_sexo(dados['sexo'])
         cadastro_page.preencher_cpf(dados['cpf'])
         cadastro_page.preencher_data_nascimento(dados['data_nascimento'])
+        cadastro_page.preencher_rg(dados['rg'])
         cadastro_page.selecionar_cargo('Cargo 1')
 
         # Selecionar atividade e EPI específico
