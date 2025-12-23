@@ -248,15 +248,18 @@ def selecionar_dropdown_por_texto(driver, dropdown_xpath, opcao_texto, timeout=1
     clicar_com_espera(driver, By.XPATH, opcao_xpath, timeout)
 
 
-def selecionar_dropdown_por_teclas(driver, dropdown_xpath, numero_opcao, timeout=10):
+def selecionar_dropdown_por_teclas(driver, dropdown_xpath, numero_opcao, timeout=10, tipo_dropdown="cargo"):
     """
-    Seleciona opção em dropdown customizado clicando diretamente na opção.
+    Seleciona opção em dropdown customizado Ant Design clicando diretamente na opção.
+
+    Suporta dropdowns de: cargo, atividade, epi
 
     Args:
         driver: Instância do WebDriver
         dropdown_xpath: XPATH do dropdown para clicar
         numero_opcao: Número da opção (0=primeira, 1=segunda, etc)
         timeout: Tempo máximo de espera
+        tipo_dropdown: Tipo do dropdown ("cargo", "atividade", "epi")
     """
     import time
 
@@ -264,10 +267,33 @@ def selecionar_dropdown_por_teclas(driver, dropdown_xpath, numero_opcao, timeout
     clicar_com_espera(driver, By.XPATH, dropdown_xpath, timeout)
     time.sleep(0.8)  # Aguardar dropdown abrir e renderizar opções
 
-    # 2. Construir XPATH para a opção específica
-    # As opções ficam em um container que aparece dinamicamente
-    # Formato: //div[@class='ant-select-item' and contains(text(), 'Cargo 0X')]
-    opcao_xpath = f"//div[contains(@class, 'ant-select-item')][@title='Cargo 0{numero_opcao + 1}']"
+    # 2. Construir XPATH baseado no tipo de dropdown
+    if tipo_dropdown == "cargo":
+        # Formato: Cargo 01, Cargo 02, etc
+        opcao_xpath = f"//div[contains(@class, 'ant-select-item')][@title='Cargo 0{numero_opcao + 1}']"
+
+    elif tipo_dropdown == "atividade":
+        # Formato: Ativid 01, Ativid 02, etc
+        opcao_xpath = f"//div[contains(@class, 'ant-select-item')][@title='Ativid 0{numero_opcao + 1}']"
+
+    elif tipo_dropdown == "epi":
+        # EPIs têm nomes completos
+        mapa_epis = {
+            0: "Capacete de segurança",
+            1: "Luvas descartáveis",
+            2: "Óculos de proteção",
+            3: "Calçado de segurança",
+            4: "Protetor auditivo"
+        }
+        nome_epi = mapa_epis.get(numero_opcao)
+        if not nome_epi:
+            raise ValueError(f"Índice de EPI inválido: {numero_opcao}")
+
+        # Buscar por texto do EPI
+        opcao_xpath = f"//div[contains(@class, 'ant-select-item') and contains(text(), '{nome_epi}')]"
+
+    else:
+        raise ValueError(f"Tipo de dropdown inválido: {tipo_dropdown}")
 
     # 3. Clicar na opção
     clicar_com_espera(driver, By.XPATH, opcao_xpath, timeout)

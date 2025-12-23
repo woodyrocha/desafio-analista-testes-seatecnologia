@@ -133,13 +133,67 @@ class CadastroPage(BasePage):
 
     @allure.step("Selecionar atividade: {atividade}")
     def selecionar_atividade(self, atividade: str):
-        """Seleciona uma atividade no dropdown."""
-        selecionar_dropdown_por_texto(self.driver, self.DROPDOWN_ATIVIDADE[1], atividade)
+        """
+        Seleciona uma atividade no dropdown.
+
+        Atividades disponíveis: Ativid 01, Ativid 02, Ativid 03, Ativid 04, Ativid 05
+        """
+        from utils.helpers import selecionar_dropdown_por_teclas
+
+        # Mapa de atividades (igual ao de cargos)
+        mapa_atividades = {
+            "Ativid 01": 0,
+            "Ativid 02": 1,
+            "Ativid 03": 2,
+            "Ativid 04": 3,
+            "Ativid 05": 4,
+        }
+
+        numero_opcao = mapa_atividades.get(atividade)
+        if numero_opcao is None:
+            raise ValueError(f"Atividade inválida: {atividade}. Use 'Ativid 01' até 'Ativid 05'.")
+
+        selecionar_dropdown_por_teclas(
+            self.driver,
+            self.DROPDOWN_ATIVIDADE[1],
+            numero_opcao,
+            tipo_dropdown="atividade"  # Para construir XPATH correto
+        )
 
     @allure.step("Selecionar EPI: {epi}")
     def selecionar_epi(self, epi: str):
-        """Seleciona um EPI no dropdown."""
-        selecionar_dropdown_por_texto(self.driver, self.DROPDOWN_EPI[1], epi)
+        """
+        Seleciona um EPI no dropdown.
+
+        EPIs disponíveis:
+        - Capacete de segurança
+        - Luvas descartáveis
+        - Óculos de proteção
+        - Calçado de segurança
+        - Protetor auditivo
+        """
+        from utils.helpers import selecionar_dropdown_por_teclas
+
+        # Mapa de EPIs
+        mapa_epis = {
+            "Capacete de segurança": 0,
+            "Luvas descartáveis": 1,
+            "Óculos de proteção": 2,
+            "Calçado de segurança": 3,
+            "Protetor auditivo": 4,
+        }
+
+        numero_opcao = mapa_epis.get(epi)
+        if numero_opcao is None:
+            epis_validos = ", ".join(mapa_epis.keys())
+            raise ValueError(f"EPI inválido: {epi}. EPIs disponíveis: {epis_validos}")
+
+        selecionar_dropdown_por_teclas(
+            self.driver,
+            self.DROPDOWN_EPI[1],
+            numero_opcao,
+            tipo_dropdown="epi"  # Para construir XPATH correto
+        )
 
     @allure.step("Preencher número do CA: {numero_ca}")
     def preencher_numero_ca(self, numero_ca: str):
