@@ -1,9 +1,23 @@
+# Core Testing
 selenium>=4.10.0
 webdriver-manager>=3.8.6
 pytest>=7.0.0
-pytest-html>=3.2.0
-python-dotenv>=1.0.0
-pytest-xdist>=3.2.0
-requests>=2.31.0
+
+# Reports & Evidence
 allure-pytest>=2.13.2
+pytest-html>=3.2.0
+pytest-metadata>=3.0.0
+
+# BDD Support
 pytest-bdd>=7.0.0
+
+# Parallel Execution
+pytest-xdist>=3.2.0
+
+# Data Generation & Validation
+Faker>=18.0.0
+validate-docbr==1.10.0
+
+# Utilities
+python-dotenv>=1.0.0
+requests>=2.31.0

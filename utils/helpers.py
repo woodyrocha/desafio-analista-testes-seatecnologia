@@ -37,15 +37,32 @@ def tirar_screenshot(driver, nome: str, path: str = "evidence/screenshots"):
     return filepath
 
 
-def anexar_screenshot_allure(driver, nome: str = "Screenshot"):
+def anexar_screenshot_allure(driver_ou_caminho, nome: str = "Screenshot"):
     """
     Captura screenshot e anexa ao relatório Allure.
 
+    **CORREÇÃO:** Agora aceita DRIVER ou CAMINHO de arquivo.
+
     Args:
-        driver: Instância do WebDriver
+        driver_ou_caminho: Instância do WebDriver OU caminho do arquivo (str)
         nome: Nome do anexo no Allure
+
+    Exemplo:
+        # Opção 1: Passar driver
+        anexar_screenshot_allure(driver, "Tela")
+
+        # Opção 2: Passar caminho
+        caminho = tirar_screenshot(driver, "teste")
+        anexar_screenshot_allure(caminho, "Tela")
     """
-    screenshot = driver.get_screenshot_as_png()
+    # Se é string, é caminho de arquivo
+    if isinstance(driver_ou_caminho, str):
+        with open(driver_ou_caminho, 'rb') as f:
+            screenshot = f.read()
+    else:
+        # Se não, é o driver
+        screenshot = driver_ou_caminho.get_screenshot_as_png()
+
     allure.attach(
         screenshot,
         name=nome,
