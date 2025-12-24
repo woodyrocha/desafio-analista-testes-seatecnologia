@@ -2,7 +2,7 @@
 Testes de Navegação e Links
 
 Objetivo: Validar navegação pelos links e menus da aplicação
-Requisito: Email RH - "Teste os links para assegurar que eles conduzam às etapas
+Requisito: "Teste os links para assegurar que eles conduzam às etapas
            e itens de menu corretos. Todos os links devem levar ao componente 'Em breve'"
 """
 
@@ -23,7 +23,6 @@ def test_navegacao_menu_lateral_icones(driver, base_url):
     """
     Testa que os 6 ícones do menu lateral levam para componente "Em breve".
 
-    ⚠️ REQUISITO OBRIGATÓRIO DO EMAIL RH:
         "Teste os links para assegurar que eles conduzam às etapas e itens de menu corretos.
          Todos os links devem levar ao componente 'Em breve'"
 
