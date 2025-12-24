@@ -16,3 +16,20 @@ Feature: Cadastro de Funcionário
     And deve exibir o nome "João Silva"
     And deve exibir o CPF "123.456.789-00"
 
+  @e2e @epi
+  Scenario: Cadastrar funcionário com EPI
+    Given que estou na tela de listagem de funcionários
+    When eu clico no botão "Adicionar Funcionário"
+    And preencho todos os campos obrigatórios com dados válidos
+    And seleciono o EPI "Capacete"
+    And seleciono a atividade "Soldagem"
+    And clico no botão "Salvar"
+    Then o funcionário deve aparecer na lista
+    And deve exibir o EPI selecionado
+
+  @e2e @validations
+  Scenario: Tentar cadastrar sem campos obrigatórios
+    Given que estou no formulário de cadastro
+    When clico no botão "Salvar" sem preencher campos
+    Then deve exibir mensagens de erro nos campos obrigatórios
+    And o cadastro não deve ser salvo

@@ -8,4 +8,3 @@ Feature: Edição de Funcionário
     When eu edito o nome para "Maria Souza"
     And clico em "Salvar"
     Then a lista deve exibir "Maria Souza"
-

@@ -8,4 +8,3 @@ Feature: Exclusão de Funcionário
     When eu escolho remover esse funcionário
     And confirmo a exclusão
     Then o funcionário não deve mais aparecer na lista
-

@@ -14,4 +14,3 @@ Feature: Validações de Campos
     When preencho a data de nascimento com "31/02/1990"
     And clico em "Salvar"
     Then deve exibir mensagem de erro "Data inválida"
-
