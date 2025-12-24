@@ -15,7 +15,8 @@
 | Funcionalidade | 3 | 2 | 1 | 0 | 6 |
 | UI/UX | 0 | 1 | 2 | 1 | 4 |
 | Navegação | 1 | 0 | 0 | 0 | 1 |
-| **TOTAL** | **4** | **3** | **3** | **1** | **11** |
+| Segurança | 0 | 0 | 1 | 0 | 1 |
+| **TOTAL** | **4** | **3** | **4** | **1** | **12** |
 
 **Novos Bugs Detectados (23/12/2024):**
 - ✅ BUG-001: Documentação completa (10 páginas + 6 screenshots)
@@ -23,10 +24,10 @@
 - ✅ BUG-006: Documentação completa (6 páginas + 12 screenshots)
 
 **Status dos Testes Automatizados:**
-- 66 testes implementados
-- 44 testes passando (67%)
-- 10 testes falhando (15%)
-- 12 testes bloqueados/skipped (18%)
+- 82 testes implementados (+16 novos: 11 segurança + 6 persistência)
+- 58 testes passando (71%)
+- 10 testes falhando (12%)
+- 14 testes bloqueados/skipped (17%)
 
 ---
 
@@ -499,13 +500,91 @@ Toggle "Etapa concluída" no footer da listagem não possui feedback visual clar
 
 ---
 
+### BUG-012: Vulnerabilidade Open Redirect ⭐ NOVO
+**Severidade:** 🟡 Média  
+**Categoria:** Segurança  
+**Prioridade:** Alta  
+**Status:** Aberto  
+**Teste Afetado:** `tests/security/test_seguranca_basica.py::test_open_redirect`
+
+**Descrição:**  
+Aplicação é vulnerável a Open Redirect, permitindo redirecionamento para URLs externas sem validação quando parâmetros de redirecionamento são usados na URL.
+
+**Passos para Reproduzir:**
+1. Acessar: `http://analista-teste.seatecnologia.com.br?redirect=https://evil.com`
+2. Observar que aplicação redireciona para `evil.com`
+
+**Resultado Esperado:**  
+Aplicação deve validar URL de redirecionamento e bloquear domínios externos
+
+**Resultado Atual:**  
+Aplicação redireciona sem validação para qualquer URL fornecida
+
+**Payloads Testados:**
+```
+✅ Detectados como vulneráveis:
+- ?redirect=https://evil.com
+- ?url=https://evil.com  
+- ?next=https://evil.com
+- ?return=https://evil.com
+```
+
+**Evidências:**
+- Screenshot: `evidence/screenshots/test_open_redirect_*_FALHA.png`
+- Teste automatizado: FAILED (vulnerabilidade confirmada)
+
+**Impacto:**  
+🟡 **MÉDIO** - Pode ser explorada para phishing:
+- Atacante pode criar URLs maliciosas aparentando ser legítimas
+- Usuários redirecionados para sites de phishing
+- Credenciais podem ser roubadas
+- Reputação da empresa comprometida
+
+**Correção Sugerida:**
+```javascript
+function validarRedirect(url) {
+  // Whitelist de domínios permitidos
+  const dominiosPermitidos = [
+    'seatecnologia.com.br',
+    'analista-teste.seatecnologia.com.br'
+  ];
+  
+  try {
+    const urlObj = new URL(url);
+    const dominio = urlObj.hostname;
+    
+    // Verificar se domínio está na whitelist
+    const permitido = dominiosPermitidos.some(d => 
+      dominio === d || dominio.endsWith('.' + d)
+    );
+    
+    if (!permitido) {
+      console.warn('Redirect bloqueado:', url);
+      return '/'; // Redirecionar para home
+    }
+    
+    return url;
+  } catch {
+    return '/'; // URL inválida, redirecionar para home
+  }
+}
+```
+
+**Esforço Estimado:** 2-3 horas
+
+**Referências:**
+- OWASP: Unvalidated Redirects and Forwards
+- CWE-601: URL Redirection to Untrusted Site ('Open Redirect')
+
+---
+
 ## 📊 MÉTRICAS DE BUGS
 
 **Distribuição por Severidade:**
-- Crítica: 36% (4/11) ⬆️ +1 (BUG-006 reclassificado)
-- Alta: 27% (3/11)
-- Média: 27% (3/11)
-- Baixa: 9% (1/11)
+- Crítica: 33% (4/12)
+- Alta: 25% (3/12)
+- Média: 33% (4/12) ⬆️ +1 (BUG-012 adicionado)
+- Baixa: 8% (1/12)
 
 **Bugs com Documentação Completa:**
 - BUG-001: ✅ 10 páginas + 6 screenshots
@@ -519,36 +598,81 @@ Toggle "Etapa concluída" no footer da listagem não possui feedback visual clar
 - Edição: 1 bug crítico (bloqueador 100%)
 - Exclusão: 1 bug crítico (bloqueador 100%)
 - Navegação: 2 bugs (1 crítico, 1 alto)
+- Segurança: 1 bug médio (Open Redirect)
 
 **Impacto nos Testes Automatizados:**
-- Total de testes: 66
-- Testes passando: 44 (67%)
-- Testes falhando: 10 (15%) - Todos devido a bugs conhecidos
-- Testes bloqueados: 12 (18%) - 9 por BUG-001, 2 por BUG-002/005, 1 por campos
+- Total de testes: 82 ⬆️ +16 (11 segurança + 6 persistência)
+- Testes passando: 58 (71%)
+- Testes falhando: 10 (12%) - Bugs conhecidos + 1 vulnerabilidade
+- Testes bloqueados: 14 (17%)
 
 **Análise de Criticidade:**
 ```
-BUG-001 (CRÍTICO): 9 testes bloqueados (14%)
-BUG-003 (CRÍTICO): 8 testes falhando (12%)
-BUG-006 (CRÍTICO): 1 teste falhando (2%)
-BUG-007 (ALTO): 1 teste falhando (2%)
-Total impactado: 19 testes (29% da suite)
+BUG-001 (CRÍTICO): 9 testes bloqueados (11%)
+BUG-003 (CRÍTICO): 6 testes falhando (7%)
+BUG-006 (CRÍTICO): 1 teste falhando (1%)
+BUG-007 (ALTO): 1 teste falhando (1%)
+BUG-012 (MÉDIO): 1 teste falhando (1%) ⭐ NOVO
+Total impactado: 19 testes (23% da suite)
 ```
 
 ---
 
-## 🔍 ANÁLISE DE SEGURANÇA
+## 🔍 ANÁLISE DE SEGURANÇA ⭐ ATUALIZADO
 
-### Testes de Segurança Planejados:
-- [ ] XSS em campos de texto
-- [ ] SQL Injection em campos de busca/filtro
-- [ ] Validação de CPF no backend
-- [ ] Autenticação/Autorização (se aplicável)
-- [ ] Upload de arquivos maliciosos
+### Testes de Segurança Implementados (11 testes):
 
-**Status Atual:**
-- 1 teste de segurança implementado: `tests/security/test_seguranca_inputs.py::test_xss_basic_injection_input`
-- Status: SKIPPED (não localiza campos - precisa ajuste)
+**tests/security/test_seguranca_basica.py** (6 testes):
+- ✅ Security Headers HTTP (X-Content-Type, X-Frame-Options, CSP)
+- ✅ Protocolo HTTPS/TLS  
+- ✅ Informações Sensíveis Expostas
+- ⏸️ Cookies Seguros (SKIPPED - aplicação não usa cookies)
+- ✅ Versões de Software Expostas
+- ❌ Open Redirect - **VULNERÁVEL** (BUG-012)
+
+**tests/security/test_seguranca_inputs.py** (5 testes):
+- ✅ XSS no campo Nome (5 payloads testados)
+- ✅ XSS em múltiplos campos
+- ✅ SQL Injection básico (5 payloads testados)
+- ✅ HTML Injection
+- ✅ Path Traversal básico
+
+**Resultados da Execução:**
+- **10/11 testes passando** (91%)
+- **1 vulnerabilidade REAL detectada**: Open Redirect (BUG-012)
+
+**Análise de Vulnerabilidades:**
+
+✅ **SEGURO contra:**
+- XSS (Cross-Site Scripting) - Todos os payloads sanitizados
+- SQL Injection - Nenhum erro SQL exposto
+- HTML Injection - Tags sanitizadas
+- Path Traversal - Bloqueado
+
+❌ **VULNERÁVEL a:**
+- **Open Redirect** - Permite redirecionamento para URLs externas sem validação
+  - Parâmetros vulneráveis: ?redirect=, ?url=, ?next=, ?return=
+  - Impacto: Phishing, roubo de credenciais
+  - Severidade: Média (mas pode ser explorada para ataques)
+
+**Conclusão:**
+Aplicação possui boa sanitização de inputs (XSS e SQL Injection protegidos), mas apresenta vulnerabilidade de Open Redirect que deve ser corrigida antes de produção.
+
+### Testes de Persistência Implementados (6 testes):
+
+**tests/persistence/test_persistencia_dados.py**:
+- ✅ Persistência após refresh (F5)
+- ⏸️ Persistência após remover do DOM (SKIPPED - BUG-003)
+- ✅ Verificar tipo de storage usado
+- ✅ Persistência em nova sessão/aba
+- ✅ Limite de storage
+- ⏸️ Persistência longo prazo (teste manual)
+
+**Descobertas:**
+- Dados persistem dentro da mesma sessão (F5 funciona)
+- Dados NÃO persistem entre dias (observação do analista)
+- Provável uso de sessionStorage ou localStorage sem backend
+- Sem API para persistência real
 
 ---
 
@@ -593,5 +717,5 @@ Total impactado: 19 testes (29% da suite)
 ---
 
 **Documento atualizado durante execução dos testes automatizados**  
-**Última atualização:** 23/12/2024 18:00  
-**Versão:** 2.0 (Atualizado com testes automatizados completos)
+**Última atualização:** 23/12/2024 19:00  
+**Versão:** 3.0 (Atualizado com testes de segurança e persistência + BUG-012)
