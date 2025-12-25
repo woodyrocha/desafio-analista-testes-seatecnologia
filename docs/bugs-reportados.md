@@ -13,21 +13,23 @@
 | Categoria | Crítico | Alto | Médio | Baixo | Total |
 |-----------|---------|------|-------|-------|-------|
 | Funcionalidade | 3 | 2 | 1 | 0 | 6 |
-| UI/UX | 0 | 1 | 2 | 1 | 4 |
+| UI/UX | 1 | 2 | 2 | 1 | 6 |
 | Navegação | 1 | 0 | 0 | 0 | 1 |
 | Segurança | 0 | 0 | 1 | 0 | 1 |
-| **TOTAL** | **4** | **3** | **4** | **1** | **12** |
+| Visual/Design | 0 | 2 | 2 | 1 | 5 |
+| **TOTAL** | **5** | **6** | **6** | **2** | **19** |
 
-**Novos Bugs Detectados (23/12/2024):**
+**Bugs Detectados:**
 - ✅ BUG-001: Documentação completa (10 páginas + 6 screenshots)
 - ✅ BUG-003: Documentação completa (8 páginas + 8 screenshots)
 - ✅ BUG-006: Documentação completa (6 páginas + 12 screenshots)
+- ✅ BUG-013 a BUG-017: Bugs visuais documentados (MANUAL_REPORT.md)
 
-**Status dos Testes Automatizados:**
-- 82 testes implementados (+16 novos: 11 segurança + 6 persistência)
-- 58 testes passando (71%)
-- 10 testes falhando (12%)
-- 14 testes bloqueados/skipped (17%)
+**Status dos Testes:**
+- **89 testes implementados** (82 Python + 7 BDD)
+- 60 testes passando (67%)
+- 14 testes falhando (16%)
+- 15 testes bloqueados/skipped (17%)
 
 ---
 
@@ -500,7 +502,7 @@ Toggle "Etapa concluída" no footer da listagem não possui feedback visual clar
 
 ---
 
-### BUG-012: Vulnerabilidade Open Redirect ⭐ NOVO
+### BUG-012: Vulnerabilidade Open Redirect 
 **Severidade:** 🟡 Média  
 **Categoria:** Segurança  
 **Prioridade:** Alta  
@@ -612,7 +614,7 @@ BUG-001 (CRÍTICO): 9 testes bloqueados (11%)
 BUG-003 (CRÍTICO): 6 testes falhando (7%)
 BUG-006 (CRÍTICO): 1 teste falhando (1%)
 BUG-007 (ALTO): 1 teste falhando (1%)
-BUG-012 (MÉDIO): 1 teste falhando (1%) ⭐ NOVO
+BUG-012 (MÉDIO): 1 teste falhando (1%) 
 Total impactado: 19 testes (23% da suite)
 ```
 
@@ -676,6 +678,163 @@ Aplicação possui boa sanitização de inputs (XSS e SQL Injection protegidos),
 
 ---
 
+## 🎨 BUGS VISUAIS/DESIGN (Comparação Figma vs Aplicação)
+
+### BUG-013: Stepper não enumera itens sequencialmente
+**Severidade:** 🟠 Alta  
+**Prioridade:** 🟠 Alta  
+**Status:** Aberto  
+**Categoria:** Visual/UX
+
+**Descrição:**  
+A barra de progresso (stepper) no topo da página exibe "ITEM 1" repetidamente ao invés de enumerar sequencialmente (Item 1, Item 2, Item 3...).
+
+**Comportamento Esperado (Figma):**
+- Stepper deve exibir: Item 1, Item 2, Item 3, Item 4... Item 9
+- Cada step deve ter numeração única e sequencial
+
+**Comportamento Atual:**
+- Stepper exibe: ITEM 1, ITEM 1, ITEM 1, ITEM 1... ITEM 1
+- Todos os steps mostram o mesmo texto
+
+**Impacto:**
+- Usuário não consegue identificar em qual etapa está
+- Prejudica UX e navegabilidade
+
+**Evidências:**
+- `manual_tests/manual_screenshots/Screenshot_01_FIGMA_from_2025-12-24_18-28-40.png`
+- `manual_tests/manual_screenshots/Screenshot_01_APP_from_2025-12-24_18-28-48.png`
+
+**Documentação Completa:** `MANUAL_REPORT.md`
+
+---
+
+### BUG-014: Botão "Limpar filtros" com cor incorreta
+**Severidade:** 🟡 Média  
+**Prioridade:** 🟡 Média  
+**Status:** Aberto  
+**Categoria:** Visual/Design System
+
+**Descrição:**  
+O botão "Limpar filtros" está implementado com estilização diferente do design aprovado no Figma.
+
+**Comportamento Esperado (Figma):**
+- Botão outline (borda colorida, fundo transparente)
+- Cor da borda: azul padrão do sistema
+
+**Comportamento Atual:**
+- Botão com preenchimento sólido azul claro
+- Não respeita estilo outline do Figma
+
+**Impacto:**
+- Funcionalidade preservada
+- Inconsistência visual com design system
+
+**Evidências:**
+- `manual_tests/manual_screenshots/Screenshot_02_FIGMA_from_2025-12-24_18-29-07.png`
+- `manual_tests/manual_screenshots/Screenshot_02_APP_from_2025-12-24_18-29-19.png`
+
+**Documentação Completa:** `MANUAL_REPORT.md`
+
+---
+
+### BUG-015: Toggle mal posicionado + ausência de marca d'água de fundo
+**Severidade:** 🟡 Média  
+**Prioridade:** 🟡 Média  
+**Status:** Aberto  
+**Categoria:** Visual/Layout
+
+**Descrição:**  
+Múltiplos problemas visuais na área do formulário:
+1. Toggle "A etapa está concluída?" posicionado incorretamente
+2. Botão "Próximo passo" dentro de DIV incorreta
+3. Ausência de marca d'água/watermark de fundo conforme Figma
+
+**Comportamento Esperado (Figma):**
+- Toggle alinhado à direita do container
+- Marca d'água (watermark) no fundo da página
+
+**Comportamento Atual:**
+- Toggle em posição diferente
+- Fundo totalmente branco, sem marca d'água
+
+**Impacto:**
+- Impacto visual significativo
+- Layout desalinhado com design
+
+**Evidências:**
+- `manual_tests/manual_screenshots/Screenshot_03_FIGMA_from_2025-12-24_18-29-50.png`
+- `manual_tests/manual_screenshots/Screenshot_03_APP_from_2025-12-24_18-29-58.png`
+
+**Documentação Completa:** `MANUAL_REPORT.md`
+
+---
+
+### BUG-016: Formulário com cores e fontes diferentes do Figma
+**Severidade:** 🟠 Alta  
+**Prioridade:** 🟠 Alta  
+**Status:** Aberto  
+**Categoria:** Visual/Design System
+
+**Descrição:**  
+Todo o formulário de cadastro apresenta cores e tipografia diferentes do design aprovado:
+- Cores dos campos de input
+- Tonalidade do toggle "Ativo/Inativo"
+- Fontes e tamanhos de texto
+- Espaçamentos
+
+**Comportamento Esperado (Figma):**
+- Paleta de cores específica definida no design system
+- Tipografia: família, tamanho e peso conforme design
+
+**Comportamento Atual:**
+- Cores aplicadas diferem do Figma
+- Fontes não seguem especificação do design
+
+**Impacto:**
+- Toda a identidade visual comprometida
+- Inconsistência generalizada no design system
+
+**Evidências:**
+- `manual_tests/manual_screenshots/Screenshot_04_FIGMA_from_2025-12-24_18-31-11.png`
+- `manual_tests/manual_screenshots/Screenshot_04_APP_from_2025-12-24_18-31-18.png`
+
+**Documentação Completa:** `MANUAL_REPORT.md`
+
+---
+
+### BUG-017: Botão "Adicionar EPI" sem estilização + ausência botão "Próximo passo"
+**Severidade:** 🔴 Crítica  
+**Prioridade:** 🔴 Máxima  
+**Status:** Aberto  
+**Categoria:** Visual/Funcionalidade
+
+**Descrição:**  
+Dois problemas na seção de EPIs:
+1. Botão "Adicionar EPI" não está estilizado conforme Figma (deveria ser link-style azul)
+2. Botão "Próximo passo" não aparece na aplicação (existe no Figma)
+
+**Comportamento Esperado (Figma):**
+- Botão "Adicionar EPI" em azul claro, estilo link (text button)
+- Botão "Próximo passo" visível no canto inferior direito
+
+**Comportamento Atual:**
+- Botão "Adicionar EPI" com estilização padrão/diferente
+- Botão "Próximo passo" AUSENTE (não renderizado)
+
+**Impacto:**
+- **CRÍTICO:** Botão "Próximo passo" ausente quebra fluxo de navegação
+- Usuário não consegue avançar na jornada
+- Estilização incorreta prejudica consistência
+
+**Evidências:**
+- `manual_tests/manual_screenshots/Screenshot_05_FIGMA_from_2025-12-24_18-31-43.png`
+- `manual_tests/manual_screenshots/Screenshot_05_APP_from_2025-12-24_18-31-52.png`
+
+**Documentação Completa:** `MANUAL_REPORT.md`
+
+---
+
 ## 📝 OBSERVAÇÕES GERAIS
 
 1. **Conformidade com Figma**: Aplicação apresenta múltiplas divergências do design especificado
@@ -698,24 +857,6 @@ Aplicação possui boa sanitização de inputs (XSS e SQL Injection protegidos),
 
 ---
 
-## 📋 ARQUIVOS DE DOCUMENTAÇÃO
 
-**Bugs Principais:**
-- `BUG-001-DOCUMENTACAO-COMPLETA.md` (10 páginas)
-- `BUG-003-DOCUMENTACAO-COMPLETA.md` (8 páginas)
-- `BUG-003-RESUMO-EXECUTIVO.md` (executivo)
-- `BUG-006-ICONES-MENU.md` (6 páginas)
-
-**Blocos de Implementação:**
-- `EXPLICACAO-BLOCO-1.md` (Correções)
-- `EXPLICACAO-BLOCO-2.md` (Navegação)
-- `EXPLICACAO-BLOCOS-3-4.md` (Edição e Exclusão)
-
-**Status Geral:**
-- `STATUS-GERAL-4-BLOCOS.md` (Panorama completo)
-
----
-
-**Documento atualizado durante execução dos testes automatizados**  
-**Última atualização:** 23/12/2024 19:00  
-**Versão:** 3.0 (Atualizado com testes de segurança e persistência + BUG-012)
+**Documento atualizado durante execução dos testes automatizados e manuais**  
+**Última atualização:** 24/12/2025

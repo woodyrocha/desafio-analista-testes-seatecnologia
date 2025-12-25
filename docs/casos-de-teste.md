@@ -278,7 +278,7 @@ Validar que todos os 5 EPIs disponíveis podem ser selecionados.
 
 ---
 
-## 🔄 TESTES E2E - EDIÇÃO DE FUNCIONÁRIO ⭐ NOVO
+## 🔄 TESTES E2E - EDIÇÃO DE FUNCIONÁRIO
 
 ### CT-018: Edição de funcionário - Fluxo básico
 **Arquivo:** `tests/e2e/test_edicao_funcionario.py::test_edicao_funcionario_fluxo_basico`  
@@ -351,7 +351,7 @@ Validar que validações funcionam durante edição (ex: CPF inválido).
 
 ---
 
-## 🗑️ TESTES E2E - EXCLUSÃO DE FUNCIONÁRIO ⭐ NOVO
+## 🗑️ TESTES E2E - EXCLUSÃO DE FUNCIONÁRIO
 
 ### CT-022: Exclusão de funcionário - Fluxo básico
 **Arquivo:** `tests/e2e/test_exclusao_funcionario.py::test_exclusao_funcionario_fluxo_basico`  
@@ -503,7 +503,7 @@ Validar conteúdo e botões do modal de confirmação.
 
 ---
 
-## 🧭 TESTES DE NAVEGAÇÃO ⭐ NOVO
+## 🧭 TESTES DE NAVEGAÇÃO
 
 ### CT-057: Navegação - Ícones do menu lateral
 **Arquivo:** `tests/navigation/test_navegacao_links.py::test_navegacao_menu_lateral_icones`  
@@ -600,7 +600,7 @@ Validar que sistema sanitiza inputs contra XSS.
 
 ---
 
-## 🔐 TESTES DE SEGURANÇA ⭐ NOVO (CT-060 a CT-070)
+## 🔐 TESTES DE SEGURANÇA (CT-060 a CT-070)
 
 ### CT-060: Security Headers HTTP
 **Status:** ✅ Passando | **Severidade:** Normal
@@ -646,7 +646,7 @@ Validar que sistema sanitiza inputs contra XSS.
 
 ---
 
-## 💾 TESTES DE PERSISTÊNCIA ⭐ NOVO (CT-071 a CT-076)
+## 💾 TESTES DE PERSISTÊNCIA (CT-071 a CT-076)
 
 ### CT-071: Persistência Após Refresh (F5)
 **Status:** ✅ Passando
@@ -706,39 +706,195 @@ Validar que sistema sanitiza inputs contra XSS.
 
 ---
 
+## 🧪 CASOS DE TESTE BDD (GHERKIN)
+
+### BLOCO 6 - Testes BDD com pytest-bdd (7 scenarios)
+
+**Objetivo:** Documentar cenários críticos em linguagem natural para stakeholders não-técnicos.
+
+**Localização:**
+- Features: `/features/*.feature`
+- Step Definitions: `/tests/step_definitions/*.py`
+
+---
+
+#### CT-BDD-001: Cadastrar funcionário com dados válidos
+**Feature:** `cadastro.feature`  
+**Prioridade:** P0 - Crítica  
+**Status:** ❌ Falhando (BUG-003)
+
+**Scenario:**
+```gherkin
+Given que estou na tela de listagem de funcionários
+When eu clico no botão "Adicionar Funcionário"
+And preencho o nome com "João Silva"
+And preencho o CPF com "123.456.789-00"
+And preencho a data de nascimento com "01/01/1990"
+And preencho o RG com "12.345.678-9"
+And seleciono o cargo "Cargo 1"
+And marco "Não usa EPI"
+And clico no botão "Salvar"
+Then o funcionário deve aparecer na lista
+```
+
+**Resultado:** ❌ FALHA - Funcionário não aparece na lista (BUG-003)
+
+---
+
+#### CT-BDD-002: Cadastrar funcionário com EPI
+**Feature:** `cadastro.feature`  
+**Prioridade:** P0 - Crítica  
+**Status:** ❌ Falhando (mapping EPI + BUG-003)
+
+**Scenario:**
+```gherkin
+Given que estou no formulário de cadastro
+When preencho todos os dados básicos
+And seleciono a atividade "Atividade 1"
+And seleciono o EPI "Capacete"
+And informo o número do CA "12345"
+And clico no botão "Salvar"
+Then o funcionário deve aparecer na lista
+And deve exibir o EPI selecionado
+```
+
+**Resultado:** ❌ FALHA - Mapeamento de EPI incorreto + BUG-003
+
+---
+
+#### CT-BDD-003: Tentar cadastrar sem campos obrigatórios
+**Feature:** `cadastro.feature`  
+**Prioridade:** P2 - Normal  
+**Status:** ✅ Passando
+
+**Scenario:**
+```gherkin
+Given que estou no formulário de cadastro
+When clico no botão "Salvar" sem preencher campos
+Then deve exibir mensagens de erro nos campos obrigatórios
+And o cadastro não deve ser salvo
+```
+
+**Resultado:** ✅ PASSA - Validações funcionam corretamente
+
+---
+
+#### CT-BDD-004: CPF inválido
+**Feature:** `validacoes.feature`  
+**Prioridade:** P2 - Normal  
+**Status:** ✅ Passando
+
+**Scenario:**
+```gherkin
+Given que estou no formulário de cadastro
+When preencho o CPF com "111.111.111-11"
+And tento salvar o cadastro
+Then deve exibir mensagem de erro "CPF inválido"
+```
+
+**Resultado:** ✅ PASSA - Validação CPF funcionando
+
+---
+
+#### CT-BDD-005: Data inválida
+**Feature:** `validacoes.feature`  
+**Prioridade:** P2 - Normal  
+**Status:** ✅ Passando
+
+**Scenario:**
+```gherkin
+Given que estou no formulário de cadastro
+When preencho a data de nascimento com "32/01/1990"
+And tento salvar o cadastro
+Then deve exibir mensagem de erro de data
+```
+
+**Resultado:** ✅ PASSA - Validação data funcionando
+
+---
+
+#### CT-BDD-006: Editar funcionário existente
+**Feature:** `edicao.feature`  
+**Prioridade:** P1 - Alta  
+**Status:** ⏸️ Bloqueado (BUG-001)
+
+**Scenario:**
+```gherkin
+Given que existe um funcionário cadastrado
+When eu clico no menu "..." do funcionário
+And clico em "Editar"
+And altero o nome para "João Santos"
+And clico em "Salvar"
+Then o nome deve ser atualizado na lista
+```
+
+**Resultado:** ⏸️ BLOQUEADO - Menu "..." não abre (BUG-001)
+
+---
+
+#### CT-BDD-007: Excluir funcionário existente
+**Feature:** `exclusao.feature`  
+**Prioridade:** P1 - Alta  
+**Status:** ⏸️ Bloqueado (BUG-001)
+
+**Scenario:**
+```gherkin
+Given que existe um funcionário cadastrado
+When eu clico no menu "..." do funcionário
+And clico em "Excluir"
+And confirmo a exclusão
+Then o funcionário não deve mais aparecer na lista
+```
+
+**Resultado:** ⏸️ BLOQUEADO - Menu "..." não abre (BUG-001)
+
+---
+
+### Benefícios do BDD:
+- ✅ Linguagem natural compreensível por stakeholders
+- ✅ Documentação viva que acompanha o código
+- ✅ Especificação executável
+- ✅ Facilita comunicação entre negócio e técnico
+- ✅ Relatório Allure organiza por Features/Behaviors
+
+---
+
 ## 📈 ESTATÍSTICAS FINAIS
 
-**Total de Testes:** 82 implementados / 82 planejados (100%) ✅
+**Total de Testes:** 89 implementados (82 Python + 7 BDD) ✅
 
 **Por Status:**
-- ✅ Passando: 58 (71%)
-- ❌ Falhando: 10 (12%)
-- ⏸️ Bloqueados: 14 (17%)
+- ✅ Passando: 60 (67%)
+- ❌ Falhando: 14 (16%)
+- ⏸️ Bloqueados: 15 (17%)
 
 **Por Categoria:**
-- E2E: 40 testes (33% passando, 15% falhando, 28% bloqueados)
-- Validações: 30 testes (100% passando) ⭐
-- Navegação: 3 testes (33% passando, 67% falhando)
-- Segurança: 11 testes (91% passando, 9% falhando) ⭐ NOVO
-- Persistência: 6 testes (67% passando, 33% bloqueados) ⭐ NOVO
+- E2E: 40 testes Python (33% passando, 15% falhando, 28% bloqueados)
+- Validações: 30 testes Python (100% passando) ⭐
+- Navegação: 3 testes Python (33% passando, 67% falhando)
+- Segurança: 11 testes Python (91% passando, 9% falhando) ⭐
+- Persistência: 6 testes Python (67% passando, 33% bloqueados) ⭐
+- **BDD: 7 scenarios** (43% passando, 28% falhando, 29% bloqueados) ⭐ 
 
 **Bugs Detectados:**
-- 4 bugs críticos documentados completamente
-- 1 vulnerabilidade de segurança (BUG-012 - Open Redirect) ⭐ NOVO
-- 26+ screenshots de evidência
-- 9 testes bloqueados por BUG-001
-- 6 testes falhando por BUG-003
-- 2 testes falhando por BUG-006/007
-- 1 teste falhando por BUG-012 (vulnerabilidade)
+- 5 bugs críticos documentados completamente (BUG-001, BUG-003, BUG-005, BUG-006, BUG-017)
+- 5 bugs visuais/design (BUG-013 a BUG-017) ⭐ 
+- 1 vulnerabilidade de segurança (BUG-012 - Open Redirect)
+- **Total: 19 bugs** (5 críticos, 6 altos, 6 médios, 2 baixos)
+- 36+ screenshots de evidência
+- 10 screenshots Figma vs App (testes manuais) ⭐ 
 
 **Tempo de Execução:**
-- Última execução: 11min 42s (702 segundos)
-- Média por teste: ~8.5 segundos
+- Última execução: 14min 20s (860 segundos)
+- Média por teste: ~9.7 segundos
+- 89 testes totais
 
 **Conclusão:**
-- ✅ Validações: 100% funcionais (30/30) ⭐
+- ✅ Validações: 100% funcionais (30/30 Python) ⭐
 - ✅ Segurança: 91% passando (10/11) - 1 vulnerabilidade detectada
 - ✅ Persistência: 67% passando (4/6) - dados persistem em sessão
+- ✅ BDD: 7 scenarios documentados em Gherkin ⭐ 
+- ✅ Testes Manuais: 5 bugs visuais documentados (Figma vs App) ⭐
 - ⚠️ Cadastro: 45% funcional (BUG-003 afeta visualização)
 - ❌ Edição/Exclusão: 0% funcional (BUG-001 bloqueia 100%)
 - ⚠️ Navegação: 33% funcional (BUG-006/007)
@@ -748,8 +904,14 @@ Validar que sistema sanitiza inputs contra XSS.
 - ✅ Aplicação SEGURA contra SQL Injection (sem erros expostos)
 - ❌ Aplicação VULNERÁVEL a Open Redirect (BUG-012)
 
+**Descobertas Visuais:**
+- ❌ Stepper não enumera corretamente (BUG-013)
+- ❌ Botões com cores incorretas (BUG-014)
+- ❌ Layout com problemas de posicionamento (BUG-015)
+- ❌ Cores e fontes divergem do Figma (BUG-016)
+- ❌ Botão "Próximo passo" ausente (BUG-017 - CRÍTICO)
+
 ---
 
 **Documento vivo - atualizado conforme evolução dos testes**  
-**Última atualização:** 23/12/2024 19:00  
-**Versão:** 3.0 (Completo com Blocos 1-5 + Segurança + Persistência)
+**Última atualização:** 24/12/2025  

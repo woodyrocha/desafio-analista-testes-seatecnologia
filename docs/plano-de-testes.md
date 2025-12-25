@@ -110,5 +110,3 @@ Itens fora do escopo inicial:
 - Manter documentação de bugs em `docs/bugs-reportados.md` e atualizá-la com evidências.
 
 ---
-
-Plano criado com base na estrutura atual do repositório e no README. Ajustes e refinamentos são esperados conforme o ambiente e o avanço dos testes.

@@ -67,4 +67,4 @@
 
 - No geral, os botões estão com estilização diferente da proposta no figma, e o mais grotesco é o Botão "Adicionar EPI".
 - No geral, os botões que deveriam levar para a página do componente EM BREVE nenhum está funcional, então a navegação fica presa entre a página com os dados dos funcionário e botão de adicionar funcionário, e a página do formulário de cadastro de funcionário.
-- A listagem dos funcionário possívelmente necessiria de uma div container própria e com scroll bar vertical, pois ficam ocultos dentro do HTML os funcionários que vão sendo adicionados, aparecem apenas os do topo da lista.
+- A listagem dos funcionário possívelmente necessaria de uma div container própria e com scroll bar vertical, pois ficam ocultos dentro do HTML os funcionários que vão sendo adicionados, aparecem apenas os do topo da lista.

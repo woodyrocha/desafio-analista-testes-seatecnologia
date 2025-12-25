@@ -3,7 +3,6 @@
 **Projeto:** Desafio QA Analyst SEA Tecnologia  
 **URL:** http://analista-teste.seatecnologia.com.br  
 **Data da Análise:** 23/12/2024  
-**Versão:** 2.0 (Pós-implementação de testes automatizados)
 
 ---
 
@@ -743,5 +742,3 @@ Priorizar correção de **BUG-001** e **BUG-003** para desbloquear 26% dos teste
 ---
 
 **Documento vivo - atualizado com dados reais dos testes**  
-**Última atualização:** 23/12/2024 19:00  
-**Versão:** 2.0 (Pós-implementação completa)

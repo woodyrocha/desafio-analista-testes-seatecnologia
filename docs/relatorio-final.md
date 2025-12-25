@@ -5,7 +5,7 @@
 **Data de Início:** 19/12/2024  
 **Data de Conclusão:** 23/12/2024  
 **Analista QA:** QA Team  
-**Deadline:** 24/12/2024 ✅ NO PRAZO
+**Deadline:** 24/12/2024
 
 ---
 
@@ -14,26 +14,35 @@
 ### Status do Projeto
 ```
 ✅ PROJETO COMPLETO - 5/5 BLOCOS (100%)
-✅ SUITE DE TESTES: 82/82 implementados (100%)
-✅ DOCUMENTAÇÃO: 40+ arquivos entregues
-✅ BUGS DETECTADOS: 4 críticos + 1 vulnerabilidade
-✅ EVIDÊNCIAS: 26+ screenshots capturados
+✅ SUITE DE TESTES: 89/89 implementados (100%)
+   ├── 82 testes Python automatizados
+   └── 7 scenarios BDD/Gherkin
+✅ DOCUMENTAÇÃO: 50+ arquivos entregues
+✅ BUGS DETECTADOS: 5 críticos + 6 altos + 6 médios + 2 baixos = 19 total
+✅ EVIDÊNCIAS: 46+ screenshots (36 Python + 10 manuais)
 ⭐ SEGURANÇA: 11 testes (1 vulnerabilidade detectada)
 ⭐ PERSISTÊNCIA: 6 testes (mecanismo identificado)
+⭐ BDD: 7 scenarios em Gherkin
+⭐ TESTES MANUAIS: 5 bugs visuais (Figma vs App)
 ```
 
 ### Métricas Principais
 
 | Métrica | Valor | Status |
 |---------|-------|--------|
-| **Testes Implementados** | 82/82 (100%) | ✅ Completo ⭐ |
-| **Testes Passando** | 58/82 (71%) | ✅ Melhorou |
+| **Testes Implementados** | 89/89 (100%) | ✅ Completo ⭐ |
+| **Testes Python** | 82 automatizados | ✅ Completo |
+| **Testes BDD** | 7 scenarios Gherkin | ✅ Completo ⭐ NOVO |
+| **Testes Manuais** | 5 bugs visuais | ✅ Completo ⭐ NOVO |
+| **Testes Passando** | 60/89 (67%) | ✅ Boa cobertura |
 | **Cobertura de Requisitos** | 100% | ✅ Completo |
-| **Bugs Críticos** | 4 detectados | ❌ Bloqueadores |
-| **Vulnerabilidades** | 1 detectada (Open Redirect) | ⚠️ Média gravidade |
-| **Documentação** | 40+ páginas | ✅ Completa |
-| **Screenshots** | 26+ evidências | ✅ Completo |
-| **Tempo Execução** | 11min 42s | ✅ Rápido |
+| **Bugs Total** | 19 detectados | ❌ Múltiplos bloqueadores |
+| **Bugs Críticos** | 5 bloqueadores | ❌ Alta severidade |
+| **Bugs Visuais** | 5 design system | ⚠️ Desalinhamento Figma |
+| **Vulnerabilidades** | 1 (Open Redirect) | ⚠️ Média gravidade |
+| **Documentação** | 50+ páginas | ✅ Completa |
+| **Screenshots** | 46+ evidências | ✅ Completo |
+| **Tempo Execução** | 14min 20s | ✅ Aceitável |
 
 ---
 
@@ -63,9 +72,9 @@
 
 ### 1. Suite de Testes Automatizados
 
-**Framework:** Pytest + Selenium + Allure Reports  
-**Padrão:** Page Object Model (POM)  
-**Cobertura:** 97% dos casos planejados
+**Framework:** Pytest + Selenium + Allure Reports + pytest-bdd  
+**Padrão:** Page Object Model (POM) + Behavior-Driven Development  
+**Cobertura:** 100% dos casos planejados
 
 **Estrutura:**
 ```
@@ -73,31 +82,40 @@ tests/
 ├── e2e/
 │   ├── test_cadastro_funcionario.py (6 testes)
 │   ├── test_cadastro_com_epi.py (11 testes)
-│   ├── test_edicao_funcionario.py (4 testes) ⭐ NOVO
-│   └── test_exclusao_funcionario.py (5 testes) ⭐ NOVO
+│   ├── test_edicao_funcionario.py (4 testes)
+│   └── test_exclusao_funcionario.py (5 testes)
 ├── validations/
 │   ├── test_validacao_cpf.py (13 testes)
 │   └── test_validacao_data.py (17 testes)
 ├── navigation/
-│   └── test_navegacao_links.py (3 testes) ⭐ NOVO
-└── security/
-    └── test_seguranca_inputs.py (2 testes)
+│   └── test_navegacao_links.py (3 testes)
+├── security/
+│   ├── test_seguranca_basica.py (6 testes) ⭐
+│   └── test_seguranca_inputs.py (5 testes) ⭐
+├── persistence/
+│   └── test_persistencia_dados.py (6 testes) ⭐
+└── step_definitions/ (BDD)
+    ├── test_cadastro_steps.py (3 scenarios) ⭐ NOVO
+    ├── test_validacoes_steps.py (2 scenarios) ⭐ NOVO
+    ├── test_edicao_steps.py (1 scenario) ⭐ NOVO
+    └── test_exclusao_steps.py (1 scenario) ⭐ NOVO
 ```
 
-**Total:** 61 testes implementados
+**Total:** 89 testes (82 Python + 7 BDD scenarios)
 
 ---
 
 ### 2. Documentação Técnica Completa
 
-**Arquivos Entregues (20+):**
+**Arquivos Entregues (30+):**
 
-**Bugs (6 arquivos):**
+**Bugs (10 arquivos):**
 1. `BUG-001-DOCUMENTACAO-COMPLETA.md` (10 páginas)
 2. `BUG-003-DOCUMENTACAO-COMPLETA.md` (8 páginas)
 3. `BUG-003-RESUMO-EXECUTIVO.md`
 4. `BUG-006-ICONES-MENU.md` (6 páginas)
-5. `bugs-reportados.md` (atualizado)
+5. `bugs-reportados.md` (v4.0 - 19 bugs)
+6. `MANUAL_REPORT.md` (Bugs visuais BUG-013 a BUG-017) ⭐ NOVO
 
 **Blocos de Implementação (9 arquivos):**
 6. `EXPLICACAO-BLOCO-1.md`
@@ -292,7 +310,43 @@ function validarRedirect(url) {
 
 ---
 
-### Outros Bugs (8)
+### Bugs Visuais/Design (5) ⭐ NOVO
+
+#### BUG-013: Stepper não enumera itens sequencialmente
+- **Severidade:** 🟠 ALTA
+- **Categoria:** Visual/UX
+- **Impacto:** Usuário não sabe em qual etapa está
+- **Evidências:** 2 screenshots (Figma vs App)
+
+#### BUG-014: Botão "Limpar filtros" com cor incorreta
+- **Severidade:** 🟡 MÉDIA
+- **Categoria:** Visual/Design System
+- **Impacto:** Inconsistência visual
+- **Evidências:** 2 screenshots (Figma vs App)
+
+#### BUG-015: Toggle mal posicionado + ausência marca d'água
+- **Severidade:** 🟡 MÉDIA
+- **Categoria:** Visual/Layout
+- **Impacto:** Layout desalinhado com design
+- **Evidências:** 2 screenshots (Figma vs App)
+
+#### BUG-016: Formulário com cores e fontes diferentes do Figma
+- **Severidade:** 🟠 ALTA
+- **Categoria:** Visual/Design System
+- **Impacto:** Identidade visual comprometida
+- **Evidências:** 2 screenshots (Figma vs App)
+
+#### BUG-017: Botão "Adicionar EPI" + ausência "Próximo passo"
+- **Severidade:** 🔴 CRÍTICA
+- **Categoria:** Visual/Funcionalidade
+- **Impacto:** Fluxo de navegação quebrado
+- **Evidências:** 2 screenshots (Figma vs App)
+
+**Documentação Completa:** `manual_tests/MANUAL_REPORT.md`
+
+---
+
+### Outros Bugs (7)
 
 **Alta Severidade:**
 - BUG-002: Botão "Adicionar Atividade" volta para tela
@@ -589,38 +643,51 @@ Taxa de Sucesso Ajustada: 76% (37/49 executáveis)
 ### Resumo do Projeto
 
 **Projeto concluído com sucesso dentro do prazo**, entregando:
-- ✅ 82 testes automatizados (100% do planejado) ⭐
-- ✅ 4 bugs críticos + 1 vulnerabilidade documentados
-- ✅ 40+ páginas de documentação técnica
-- ✅ 26+ screenshots de evidência
+- ✅ **89 testes** implementados (100% do planejado) ⭐
+  - 82 testes Python automatizados
+  - 7 scenarios BDD/Gherkin
+- ✅ **19 bugs documentados** (5 críticos + 6 altos + 6 médios + 2 baixos)
+  - 12 bugs funcionais
+  - 5 bugs visuais (comparação Figma vs App)
+  - 1 vulnerabilidade de segurança
+  - 1 bug de navegação
+- ✅ 50+ páginas de documentação técnica
+- ✅ 46+ screenshots de evidência (36 Python + 10 manuais)
 - ✅ 100% dos requisitos do email RH atendidos
 - ✅ 11 testes de segurança (1 vulnerabilidade detectada)
 - ✅ 6 testes de persistência (mecanismo identificado)
+- ✅ Relatório Allure interativo gerado
+- ✅ Testes manuais visuais documentados (MANUAL_REPORT.md)
 
 **Principais Conquistas:**
 1. ✅ Validações 100% funcionais (30 testes)
-2. ✅ Detecção de 4 bugs críticos + 1 vulnerabilidade de segurança
-3. ✅ Documentação profissional completa (40+ páginas)
-4. ✅ Suite de testes 100% completa (82 testes)
+2. ✅ Detecção de 19 bugs + 1 vulnerabilidade de segurança
+3. ✅ Documentação profissional completa (50+ páginas)
+4. ✅ Suite de testes 100% completa (89 testes)
 5. ✅ Análise de segurança completa (11 testes)
+6. ✅ BDD implementado (7 scenarios em Gherkin) ⭐ NOVO
+7. ✅ Testes manuais visuais (5 bugs design) ⭐ NOVO
+8. ✅ Relatório Allure com evidências visuais ⭐
 
 **Principais Desafios:**
-1. ❌ BUG-001 bloqueia 11% dos testes (edição/exclusão)
-2. ❌ BUG-003 afeta 7% dos testes (lista sem scroll)
+1. ❌ BUG-001 bloqueia 17% dos testes (edição/exclusão)
+2. ❌ BUG-003 afeta 16% dos testes (lista sem scroll)
 3. ❌ BUG-012 vulnerabilidade de segurança (Open Redirect)
-4. ❌ CRUD apenas 50% funcional
-5. ❌ Conformidade com Figma em 33%
+4. ❌ BUG-017 botão "Próximo passo" ausente (crítico)
+5. ❌ CRUD apenas 50% funcional
+6. ❌ Conformidade com Figma em 40% (5 bugs visuais)
 
 **Recomendação Final:**
-> Sistema possui validações excelentes mas apresenta bugs críticos e 1 vulnerabilidade de segurança que impedem uso em produção. Recomenda-se correção dos BUG-001, BUG-003 e BUG-012 antes de qualquer deploy.
+> Sistema possui validações excelentes mas apresenta **5 bugs críticos** e **1 vulnerabilidade de segurança** que impedem uso em produção. Recomenda-se correção prioritária de BUG-001, BUG-003, BUG-012 e BUG-017 antes de qualquer deploy.
 
 **Status para Produção:** ❌ NÃO RECOMENDADO
-- Bloqueadores: 4 bugs críticos + 1 vulnerabilidade
+- Bloqueadores: 5 bugs críticos + 1 vulnerabilidade
 - CRUD: 50% funcional
-- UX: Comprometida
+- UX: Comprometida (lista sem scroll + botão ausente)
 - Segurança: 1 vulnerabilidade exploitável
+- Design: 5 divergências do Figma
 
-**Após Correções:** ✅ RECOMENDADO (estimativa: +15 horas de dev)
+**Após Correções:** ✅ RECOMENDADO (estimativa: +20 horas de dev)
 
 ---
 
@@ -662,11 +729,23 @@ Para esclarecimentos ou informações adicionais:
 ┌──────────────────────────────────────────┐
 │  PROJETO CONCLUÍDO COM SUCESSO           │
 │                                          │
-│  82 TESTES IMPLEMENTADOS (100%) ⭐       │
-│  58 TESTES PASSANDO (71%)                │
-│  4 BUGS CRÍTICOS + 1 VULNERABILIDADE     │
-│  26+ SCREENSHOTS CAPTURADOS              │
-│  40+ PÁGINAS DE DOCUMENTAÇÃO             │
+│  89 TESTES IMPLEMENTADOS (100%) ⭐       │
+│    ├── 82 testes Python automatizados   │
+│    └── 7 scenarios BDD/Gherkin          │
+│                                          │
+│  60 TESTES PASSANDO (67%)                │
+│  14 TESTES FALHANDO (16%)                │
+│  15 TESTES BLOQUEADOS (17%)              │
+│                                          │
+│  19 BUGS DETECTADOS + 1 VULNERABILIDADE  │
+│    ├── 5 bugs críticos                  │
+│    ├── 6 bugs altos                     │
+│    ├── 6 bugs médios                    │
+│    ├── 2 bugs baixos                    │
+│    └── 5 bugs visuais (Figma vs App)    │
+│                                          │
+│  46+ SCREENSHOTS CAPTURADOS              │
+│  50+ PÁGINAS DE DOCUMENTAÇÃO             │
 │  100% REQUISITOS RH ATENDIDOS            │
 │  11 TESTES DE SEGURANÇA                  │
 │  6 TESTES DE PERSISTÊNCIA                │
@@ -680,13 +759,4 @@ Para esclarecimentos ou informações adicionais:
 
 ---
 
-**Documento Gerado:** 23/12/2024  
-**Versão:** 2.0 Final (Atualizado com Segurança e Persistência)  
-**Status:** ✅ COMPLETO  
-**Prazo:** ✅ CUMPRIDO (24/12/2024)
-
----
-
-**Assinatura Digital:**  
-QA Team - Desafio SEA Tecnologia  
-Data: 23/12/2024 18:45
+**Documento Gerado:** 24/12/2025  

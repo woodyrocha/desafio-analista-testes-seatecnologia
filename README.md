@@ -2,8 +2,7 @@
 
 **Aplicação:** [http://analista-teste.seatecnologia.com.br](http://analista-teste.seatecnologia.com.br)
 **Protótipo (Figma):** [https://tinyurl.com/yl58hs4m](https://tinyurl.com/yl58hs4m)
-**Prazo original:** 7 dias
-**Prazo real de execução:** 4 dias (execução acelerada)
+
 
 ---
 
@@ -144,6 +143,7 @@ Abaixo está a estrutura atual do repositório, refletindo as alterações reais
 ├── tests/
 │   ├── e2e/
 │   │   ├── test_cadastro_funcionario.py
+│   │   ├── test_cadastro_com_epi.py
 │   │   ├── test_edicao_funcionario.py
 │   │   └── test_exclusao_funcionario.py
 │   ├── validations/
@@ -151,9 +151,18 @@ Abaixo está a estrutura atual do repositório, refletindo as alterações reais
 │   │   └── test_validacao_data.py
 │   ├── navigation/
 │   │   └── test_navegacao_links.py
-│   └── security/
-│       ├── test_seguranca_basica.py
-│       └── test_seguranca_inputs.py
+│   ├── persistence/
+│   │   └── test_persistencia_dados.py
+│   ├── security/
+│   │   ├── test_seguranca_basica.py
+│   │   └── test_seguranca_inputs.py
+│   └── step_definitions/    # Steps BDD (pytest-bdd)
+│       ├── __init__.py
+│       ├── conftest.py
+│       ├── test_cadastro_steps.py
+│       ├── test_edicao_steps.py
+│       ├── test_exclusao_steps.py
+│       └── test_validacoes_steps.py
 
 ├── pages/                # Page Objects (POM) — agora pacotes Python
 │   ├── __init__.py
@@ -172,6 +181,13 @@ Abaixo está a estrutura atual do repositório, refletindo as alterações reais
 │   ├── videos/
 │   └── allure-results/   # Resultados brutos do Allure
 │       └── allure-report/ # Relatório HTML gerado pelo Allure
+
+├── manual_tests/
+│   ├── MANUAL_REPORT.md  # Relatório de testes manuais visuais
+│   └── manual_screenshots/
+│       ├── Screenshot_01_APP_from_2025-12-24_18-28-48.png
+│       ├── Screenshot_01_FIGMA_from_2025-12-24_18-28-40.png
+│       └── ...
 
 └── .pytest_cache/
 ```
@@ -205,15 +221,71 @@ python -m venv venv
 source venv/bin/activate  # Linux/Mac
 venv\\Scripts\\activate     # Windows
 
-# instalar dependências
+# instalar dependências Python
 pip install -r requirements.txt
 ```
+
+#### Instalação do Allure CLI
+
+O Allure CLI é necessário para visualizar os relatórios. **Deve ser instalado na máquina** (não é pacote Python).
+
+**Linux (Debian/Ubuntu):**
+```bash
+# Opção 1: Download manual (recomendado)
+cd /tmp
+wget https://github.com/allure-framework/allure2/releases/download/2.30.0/allure-2.30.0.tgz
+tar -zxvf allure-2.30.0.tgz
+sudo mv allure-2.30.0 /opt/allure
+sudo ln -s /opt/allure/bin/allure /usr/local/bin/allure
+
+# Instalar Java (necessário para Allure)
+sudo apt update
+sudo apt install default-jre -y
+
+# Verificar instalação
+allure --version
+java -version
+```
+
+**macOS:**
+```bash
+# Via Homebrew (recomendado)
+brew install allure
+
+# Verificar instalação
+allure --version
+```
+
+**Windows:**
+```powershell
+# Via Scoop (recomendado)
+scoop install allure
+
+# OU via Chocolatey
+choco install allure
+
+# Verificar instalação
+allure --version
+```
+
+**Nota:** O Allure requer Java instalado. Se não tiver, instale conforme comandos acima.
+
+---
 
 Execução dos testes:
 
 ```bash
+# Limpar dados antigos do Allure (recomendado antes de nova execução)
+rm -rf evidence/allure-results/*
+
 # Executar todos os testes com relatório Allure
 pytest -v --alluredir=evidence/allure-results
+
+# Executar apenas testes BDD
+pytest tests/step_definitions/ -v --alluredir=evidence/allure-results
+
+# Executar apenas testes Python (excluir BDD)
+pytest tests/ -v --ignore=tests/step_definitions/ --alluredir=evidence/allure-results
 
 # Executar testes específicos
 pytest tests/e2e/test_cadastro_funcionario.py -v --alluredir=evidence/allure-results
@@ -221,11 +293,15 @@ pytest tests/e2e/test_cadastro_funcionario.py -v --alluredir=evidence/allure-res
 # Executar testes por marker
 pytest -m e2e -v --alluredir=evidence/allure-results
 pytest -m validations -v --alluredir=evidence/allure-results
+pytest -m security -v --alluredir=evidence/allure-results
 
-# Gerar e abrir relatório Allure
+# Executar em paralelo (mais rápido)
+pytest -v -n auto --alluredir=evidence/allure-results
+
+# Gerar e abrir relatório Allure (abre navegador automaticamente)
 allure serve evidence/allure-results
 
-# Gerar relatório Allure estático
+# Gerar relatório Allure estático (para compartilhar)
 allure generate evidence/allure-results -o evidence/allure-report --clean
 ```
 
@@ -234,6 +310,23 @@ allure generate evidence/allure-results -o evidence/allure-report --clean
 ### 6.4 BDD com Gherkin
 
 Os cenários de teste críticos foram documentados em Gherkin para facilitar o entendimento por parte de todos os stakeholders, incluindo analistas de negócio e gestores.
+
+**Scenarios BDD Implementados (7 total):**
+
+1. **cadastro.feature (3 scenarios):**
+   - Cadastrar funcionário com dados válidos
+   - Cadastrar funcionário com EPI
+   - Tentar cadastrar sem campos obrigatórios
+
+2. **validacoes.feature (2 scenarios):**
+   - CPF inválido
+   - Data inválida
+
+3. **edicao.feature (1 scenario):**
+   - Editar funcionário existente (SKIPPED - BUG-001)
+
+4. **exclusao.feature (1 scenario):**
+   - Excluir funcionário existente (SKIPPED - BUG-001)
 
 **Exemplo de arquivo `.feature`:**
 
@@ -259,11 +352,10 @@ Feature: Cadastro de Funcionário
     And deve exibir o CPF "123.456.789-00"
 
   @validations
-  Scenario: Tentar cadastrar funcionário com CPF inválido
-    Given que estou na tela de cadastro de funcionário
-    When preencho o CPF com "111.111.111-11"
-    And clico no botão "Salvar"
-    Then deve exibir mensagem de erro "CPF inválido"
+  Scenario: Tentar cadastrar sem campos obrigatórios
+    Given que estou no formulário de cadastro
+    When clico no botão "Salvar" sem preencher campos
+    Then deve exibir mensagens de erro nos campos obrigatórios
     And o cadastro não deve ser salvo
 ```
 
@@ -280,6 +372,7 @@ Feature: Cadastro de Funcionário
 * Documentação viva que acompanha o código
 * Facilita discussões sobre requisitos e comportamentos esperados
 * Serve como especificação executável
+* No relatório Allure, scenarios aparecem organizados por Features
 
 ---
 
@@ -381,53 +474,10 @@ Será fornecida uma análise abrangente contendo:
 * Considerações de segurança
 * Propostas de melhorias de UX/UI
 
----
-
-## 10. Planejamento Cronológico de Execução (4 dias)
-
-### Dia 1 – Análise e Planejamento (quinta/noite)
-
-* Análise completa do Figma
-* Testes exploratórios iniciais
-* Mapeamento de telas e fluxos
-* Criação do repositório GitHub
-* Estruturação do README e documentação inicial
-
-### Dia 2 – Testes Manuais e Estrutura da Automação (sexta)
-
-* Execução de testes manuais críticos
-* Testes de navegação e componente "Em breve"
-* Registro de bugs com evidências
-* Criação da estrutura da suíte de automação
-* Implementação da base do Page Object Model
-* Configuração do Allure Reports
-* Criação dos arquivos `.feature` em Gherkin
-
-### Dia 3 – Automação dos Fluxos Críticos (sábado)
-
-* Automação do cadastro de funcionário
-* Automação das validações de formulário
-* Automação de persistência e recuperação
-* Automação de navegação
-* Ajustes para lidar com falhas conhecidas da aplicação
-* Implementação de steps BDD (pytest-bdd)
-* Integração dos testes com Allure
-
-### Dia 4 – Refinamento e Entrega (domingo/segunda)
-
-* Automação de edição e exclusão
-* Testes de navegação
-* Testes básicos de segurança
-* Análise de melhorias (performance, segurança, UX)
-* Refatoração e organização do código
-* Revisão final da documentação
-* Elaboração do relatório final
-* Geração do relatório Allure consolidado
-* Preparação da entrega
 
 ---
 
-## 11. Estrutura do Relatório Final
+## 10. Estrutura do Relatório Final
 
 O relatório final incluirá:
 
