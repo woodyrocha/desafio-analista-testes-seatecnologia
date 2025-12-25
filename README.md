@@ -521,7 +521,7 @@ O relatório final incluirá:
 
 ## 12. Considerações Finais
 
-Diante do prazo reduzido e da instabilidade da aplicação, o foco do trabalho foi priorizar fluxos críticos, manter clareza na documentação e demonstrar capacidade de análise, organização e automação com critério técnico.
+O foco do trabalho foi priorizar fluxos críticos, manter clareza na documentação e demonstrar capacidade de análise, organização e automação com critério técnico.
 
 O objetivo não foi atingir cobertura total, mas entregar uma solução sólida, compreensível e alinhada às boas práticas de testes de software, incluindo análise crítica de melhorias e recomendações fundamentadas.
 
