@@ -58,13 +58,18 @@ Apresentar escopo, métricas e dar dimensão do trabalho realizado.
 >
 > **Em números, o projeto entregou:**
 > - **89 testes** implementados — 82 automatizados em Python e 7 cenários BDD
+> - **5 testes manuais** de comparação visual Figma vs Aplicação
 > - **19 bugs** documentados, incluindo 5 críticos e 1 vulnerabilidade de segurança
-> - **46 screenshots** de evidência
+> - **5 bugs visuais/UI** adicionais identificados nos testes manuais
+> - **50+ páginas** de documentação técnica
+> - **46 screenshots** de evidência automatizada + 10 screenshots de comparação visual
 >
-> **Resultados da execução:**
+> **Resultados da execução automatizada:**
 > - ✅ **67%** dos testes passando
 > - ❌ **16%** falhando devido a bugs reais da aplicação
 > - ⏸️ **17%** bloqueados aguardando correções
+>
+> **Sobre os testes manuais:** Optei por não automatizar as validações visuais porque o custo-benefício não se justifica. Automatizar comparação pixel-a-pixel entre Figma e aplicação exigiria ferramentas como Percy ou Applitools, com setup complexo e manutenção constante. Para 5 validações pontuais de UI, a execução manual com screenshots lado a lado é mais eficiente e igualmente eficaz como evidência.
 >
 > Importante destacar: **testes falhando não são necessariamente ruins** — eles estão cumprindo seu papel de detectar defeitos."
 
